@@ -1,0 +1,50 @@
+---
+title: "ADA Assignment 1"
+author: "Jocelyn Stalker"
+date: "8/25/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse) #importing, tidying, plotting data
+library(knitr) #making tables
+library(leaflet)
+#library(tinytex) #may need for knitting pdf versions of .rmd file
+```
+
+``` {r question 1}
+cars <- mtcars
+ggplot(cars, aes(wt, mpg)) +
+  geom_point()
+ggsave("outputs/cars-wt-mpg.png")
+
+ggplot(cars, aes(hp, mpg)) + geom_point()
+ggsave("outputs/cars-hp-mpg.png")
+
+lm.cars.wt.mpg <- lm(mpg ~ wt, data= cars)
+anova(lm.cars.wt.mpg)
+
+cars$cyl <- as.factor(cars$cyl)
+cars.summary1 <- summarize(group_by(cars, cyl), .groups = "keep",
+          n=n(), 
+          mean=mean(mpg), 
+          sd=sd(mpg))
+kable(cars.summary1, format = "pandoc", caption = 'Table 1. A summary kable displaying number, mean, and standard deviation of gas mileage for each of three cylinder options for cars.')
+
+cars.summary2 <- summarize(group_by(cars, gear),
+                           n= n(),
+                           mean= mean(mpg),
+                           sd= sd(mpg))
+kable(cars.summary2, format= "pandoc", caption= "Table 2. A summary kable displaying the number, mean, and standard deviation of gas mileage for each of three gear options in cars.")
+
+leaflet() %>%
+  setView(-122.283770, 37.832750, zoom = 16) %>% #lat-long of the place of interest
+  addTiles() %>%
+  addMarkers(-122.283770, 37.832750, popup = "Cars Animation Studio")
+```
+[This](https://en.wikipedia.org/wiki/Cars_(film)) is where you can go to learn more about _Cars_ the film.
+
+
+![Now _that's_ what a real car looks like.](https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/CA8A8E774188F15722005A4AED4FCBBF29858C547CB7613BA69EBB2E554485DD/scale?width=1200&aspectRatio=1.78&format=jpeg)
